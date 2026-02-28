@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <footer class="footer">
     <div class="footer__container container">
       <div class="footer__column footer__column--about">
@@ -23,7 +23,7 @@
           <div class="footer__imglogokav">
             <img
               class="logokavweb"
-              :src="logoKavweb"
+              :src="developerLogoSrc"
               width="36"
               height="23"
               alt="Логотип разработчика"
@@ -41,8 +41,15 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import logoKavweb from '@/assets/image/kavLogoBlack.webp';
+import defaultDeveloperLogo from '@/assets/template/developer-logo.svg';
 import { fetchBlocks } from '@/js/siteContentApi';
+
+const props = defineProps({
+  settings: {
+    type: Object,
+    default: null,
+  },
+});
 
 const blocks = ref([]);
 
@@ -104,8 +111,9 @@ const footerAbout = computed(() => {
 });
 
 const developerLabel = computed(() => String(footerMeta.value.developer_label || '').trim() || 'Разработчик');
-const developerUrl = computed(() => String(footerMeta.value.developer_url || '').trim() || 'https://kavweb.ru');
+const developerUrl = computed(() => String(footerMeta.value.developer_url || '').trim() || 'https://example.com');
 const developerAriaLabel = computed(() => String(footerMeta.value.developer_aria_label || '').trim() || 'Перейти на сайт разработчика');
+const developerLogoSrc = computed(() => props.settings?.media?.developer_logo_url || defaultDeveloperLogo);
 const copyrightText = computed(() => {
   const value = String(footerMeta.value.copyright || '').trim();
   return value || '© 2025. Все права защищены.';

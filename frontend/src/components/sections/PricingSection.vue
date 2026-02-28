@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <section class="pricing-section container" :id="$attrs.id || 'pricing'">
     <h2 class="pricing-section__title">{{ sectionTitle }}</h2>
     <div class="doctors__subtitle" :style="subtitleStyle">
@@ -8,7 +8,7 @@
     <div class="doctors__team">
       <img
         class="doctors__team_img"
-        :src="doctorsImage"
+        :src="teamImageSrc"
         width="2200"
         height="1524"
         :alt="teamImageAlt"
@@ -43,6 +43,10 @@ const props = defineProps({
   doctors: {
     type: Array,
     default: () => [],
+  },
+  teamImage: {
+    type: String,
+    default: '',
   },
   meta: {
     type: Object,
@@ -88,6 +92,7 @@ const sectionSubtitle = computed(() => {
   return value || 'НАША КОМАНДА';
 });
 const sectionDescription = computed(() => props.description || defaultDescription);
+const teamImageSrc = computed(() => props.teamImage || doctorsImage);
 const teamImageAlt = computed(() => {
   const value = String(meta.value.team_image_alt || '').trim();
   return value || 'Команда специалистов';
@@ -106,5 +111,3 @@ const descriptionStyle = computed(() => ({
   textAlign: normalizeAlignment(meta.value.content_alignment, 'center'),
 }));
 </script>
-
-

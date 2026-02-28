@@ -1,29 +1,34 @@
-<!-- App.vue-->
-<template>
+﻿<template>
   <div class="layout">
-    <!-- Общая шапка -->
-    <Header />
+    <Header :settings="resolvedSettings" />
 
-    <!-- Контент страниц -->
     <main class="layout__main">
       <router-view />
     </main>
 
-    <!-- Общий подвал -->
-    <Footer />
+    <Footer :settings="resolvedSettings" />
   </div>
 </template>
 
 <script setup>
-// import { useRouter } from 'vue-router'
+import { computed, onMounted, ref, watch } from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import { fetchSettings } from '@/js/siteContentApi'
+import { applyThemeVariables, mergeSiteSettings } from '@/js/defaultSiteSettings'
 
-/* обработчик клика "Связаться" из Header */
-// const router = useRouter()
-// function goContact() {
-//   router.push({ path: '/', hash: '#contacts' })
-// }
+const settings = ref(null)
+const resolvedSettings = computed(() => mergeSiteSettings(settings.value || {}))
+
+watch(
+  resolvedSettings,
+  (value) => {
+    applyThemeVariables(value)
+  },
+  { immediate: true, deep: true },
+)
+
+onMounted(async () => {
+  settings.value = await fetchSettings()
+})
 </script>
-
-

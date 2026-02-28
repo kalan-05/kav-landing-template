@@ -31,8 +31,18 @@ class SettingsApiTest extends TestCase
                 'address_main',
                 'worktime_main',
                 'social',
+                'media' => ['logo_url', 'hero_image_url', 'team_image_url', 'developer_logo_url'],
                 'seo' => ['title', 'description', 'keywords'],
                 'map' => ['lat', 'lng', 'zoom'],
+                'theme' => [
+                    'body_bg_color',
+                    'nav_bg_color',
+                    'accent_bg_color',
+                    'text_body_color',
+                    'text_secondary_color',
+                    'text_accent_color',
+                    'border_color',
+                ],
                 'og_image_url',
             ]);
     }

@@ -28,12 +28,23 @@ class InitialContentSeeder extends Seeder
                     'wa' => '',
                     'vk' => '',
                 ],
+                'logo' => null,
+                'hero_image' => null,
+                'team_image' => null,
+                'developer_logo' => null,
                 'seo_title' => 'Клиника экспертной диагностики',
                 'seo_description' => 'Шаблон медицинского сайта на Laravel, Filament и Vue 3.',
                 'seo_keywords' => 'медицинский центр, диагностика, узи, консультации',
                 'map_lat' => 59.9386,
                 'map_lng' => 30.3141,
                 'map_zoom' => 16,
+                'theme_body_bg' => '#F2F6FA',
+                'theme_nav_bg' => '#edf0f0',
+                'theme_accent_bg' => '#fefeff',
+                'theme_text_body' => '#494949',
+                'theme_text_secondary' => '#7a7777',
+                'theme_text_accent' => '#DAC5A7',
+                'theme_border_color' => '#6c5d48',
             ]
         );
 

@@ -1,4 +1,4 @@
-﻿# Backend
+# Backend
 
 Laravel + Filament admin backend for the KAV medical landing template.
 
@@ -20,3 +20,24 @@ php artisan storage:link
 ```
 
 On Beget use `php8.2` for artisan commands.
+
+## Helper scripts
+
+Quick install:
+
+```bash
+bash scripts/install-template.sh
+```
+
+Beget deploy helper:
+
+```bash
+bash scripts/deploy-beget.sh
+```
+
+Before deploy ensure:
+
+- `.env` is filled
+- document root points to `backend/public`
+- write permissions are available for `storage/` and `bootstrap/cache/`
+- frontend production build is already copied to the public web root

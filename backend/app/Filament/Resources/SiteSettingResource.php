@@ -1,9 +1,10 @@
-<?php
+﻿<?php
 
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SiteSettingResource\Pages;
 use App\Models\SiteSetting;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
@@ -76,6 +77,43 @@ class SiteSettingResource extends Resource
                     ])
                     ->columns(2),
 
+                Fieldset::make('Бренд и медиа')
+                    ->schema([
+                        FileUpload::make('logo')
+                            ->label('Логотип')
+                            ->disk('public')
+                            ->directory('settings')
+                            ->image()
+                            ->imageEditor()
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
+                            ->maxSize(10240),
+                        FileUpload::make('hero_image')
+                            ->label('Hero изображение')
+                            ->disk('public')
+                            ->directory('settings')
+                            ->image()
+                            ->imageEditor()
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
+                            ->maxSize(10240),
+                        FileUpload::make('team_image')
+                            ->label('Общая фотография команды')
+                            ->disk('public')
+                            ->directory('settings')
+                            ->image()
+                            ->imageEditor()
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
+                            ->maxSize(10240),
+                        FileUpload::make('developer_logo')
+                            ->label('Логотип разработчика')
+                            ->disk('public')
+                            ->directory('settings')
+                            ->image()
+                            ->imageEditor()
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
+                            ->maxSize(10240),
+                    ])
+                    ->columns(2),
+
                 Fieldset::make('SEO')
                     ->schema([
                         TextInput::make('seo_title')->label('SEO title')->maxLength(255),
@@ -87,7 +125,7 @@ class SiteSettingResource extends Resource
                             ->directory('settings')
                             ->image()
                             ->imageEditor()
-                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
                             ->maxSize(10240),
                     ])
                     ->columns(2),
@@ -97,6 +135,18 @@ class SiteSettingResource extends Resource
                         TextInput::make('map_lat')->label('Широта')->numeric()->step(0.000001),
                         TextInput::make('map_lng')->label('Долгота')->numeric()->step(0.000001),
                         TextInput::make('map_zoom')->label('Масштаб')->numeric()->minValue(1)->maxValue(20),
+                    ])
+                    ->columns(3),
+
+                Fieldset::make('Тема')
+                    ->schema([
+                        ColorPicker::make('theme_body_bg')->label('Фон страницы')->default('#F2F6FA'),
+                        ColorPicker::make('theme_nav_bg')->label('Фон шапки и меню')->default('#edf0f0'),
+                        ColorPicker::make('theme_accent_bg')->label('Фон карточек и блоков')->default('#fefeff'),
+                        ColorPicker::make('theme_text_body')->label('Основной цвет текста')->default('#494949'),
+                        ColorPicker::make('theme_text_secondary')->label('Вторичный текст')->default('#7a7777'),
+                        ColorPicker::make('theme_text_accent')->label('Акцентный текст')->default('#DAC5A7'),
+                        ColorPicker::make('theme_border_color')->label('Цвет границ')->default('#6c5d48'),
                     ])
                     ->columns(3),
 

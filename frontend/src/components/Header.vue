@@ -13,7 +13,7 @@
           >
             <img
               class="logo__image"
-              :src="logoUrl"
+              :src="logoSrc"
               width="275"
               height="268"
               :alt="logoImageAlt"
@@ -90,11 +90,17 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import logoUrl from '@/assets/template/logo-clinic.svg';
-import { fetchBlocks, fetchSettings } from '@/js/siteContentApi';
+import defaultLogoUrl from '@/assets/template/logo-clinic.svg';
+import { fetchBlocks } from '@/js/siteContentApi';
+
+const props = defineProps({
+  settings: {
+    type: Object,
+    default: null,
+  },
+});
 
 const blocks = ref([]);
-const settings = ref(null);
 
 function normalizeMeta(rawMeta) {
   if (!rawMeta || typeof rawMeta !== 'object') {
@@ -132,6 +138,7 @@ function findBlock(key) {
   if (!Array.isArray(blocks.value)) {
     return null;
   }
+
   return blocks.value.find((item) => item?.key === key) || null;
 }
 
@@ -142,17 +149,16 @@ function blockTitle(key, fallback) {
 }
 
 const headerMeta = computed(() => normalizeMeta(findBlock('header')?.meta));
-
 const bookingLabel = computed(() => String(headerMeta.value.booking_label || '').trim() || 'Записаться');
-const bookingUrl = computed(() => String(headerMeta.value.booking_url || '').trim() || 'https://www.1spbgmu.ru/klinika/platnye-uslugi');
-const departmentPageUrl = computed(() => String(headerMeta.value.department_url || '').trim() || 'https://www.1spbgmu.ru/klinika/kliniki-pspbgmu/106-glavnaya/3715-otdelenie-funktsionalnoj-diagnostiki-1');
-
-const logoTitleText = computed(() => String(headerMeta.value.logo_title || '').trim() || settings.value?.site_name || 'Медицинский центр');
+const bookingUrl = computed(() => String(headerMeta.value.booking_url || '').trim() || 'https://example.com/booking');
+const departmentPageUrl = computed(() => String(headerMeta.value.department_url || '').trim() || 'https://example.com/about');
+const logoTitleText = computed(() => String(headerMeta.value.logo_title || '').trim() || props.settings?.site_name || 'Медицинский центр');
 const logoTitleLines = computed(() => {
   const customText = String(headerMeta.value.logo_lines || '').trim();
   return toLines(customText, logoTitleText.value);
 });
 const logoImageAlt = computed(() => String(headerMeta.value.logo_alt || '').trim() || 'Логотип медицинского центра');
+const logoSrc = computed(() => props.settings?.media?.logo_url || defaultLogoUrl);
 
 const menuItems = computed(() => [
   { key: 'about', hash: '#about', label: blockTitle('about', 'О нас') },
@@ -178,14 +184,7 @@ function menuGoalParams(key) {
 }
 
 onMounted(async () => {
-  const [settingsResponse, blocksResponse] = await Promise.all([
-    fetchSettings(),
-    fetchBlocks(),
-  ]);
-
-  settings.value = settingsResponse || null;
+  const blocksResponse = await fetchBlocks();
   blocks.value = Array.isArray(blocksResponse) ? blocksResponse : [];
 });
 </script>
-
-

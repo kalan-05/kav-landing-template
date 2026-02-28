@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="72" viewBox="0 0 144 72" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Developer Logo</title>
+  <desc id="desc">Template developer logo placeholder.</desc>
+  <rect width="144" height="72" rx="12" fill="#111827"/>
+  <path d="M24 50V22H32L44 39.5L56 22H64V50H56V34.5L46.5 48H41.5L32 34.5V50H24Z" fill="#F3F4F6"/>
+  <path d="M74 50V22H82V50H74Z" fill="#F3F4F6"/>
+  <path d="M88 50V22H97.5L112 39.5V22H120V50H110.5L96 32.5V50H88Z" fill="#F3F4F6"/>
+  <circle cx="127.5" cy="17.5" r="8.5" fill="#C58C5A"/>
+</svg>

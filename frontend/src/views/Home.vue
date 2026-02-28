@@ -13,6 +13,7 @@ import MapSection from '@/components/sections/MapSection.vue';
 
 import heroCover from '@/assets/template/hero-cover.svg';
 import { fetchSiteContent } from '@/js/siteContentApi';
+import { mergeSiteSettings } from '@/js/defaultSiteSettings';
 
 const settings = ref(null);
 const blocks = ref([]);
@@ -86,50 +87,7 @@ function getBlockMeta(block) {
   return normalizeBlockMeta(block?.meta);
 }
 
-const fallbackSettings = computed(() => ({
-  site_name: 'Медицинский центр',
-  phones: [],
-  email: '',
-  address_main: '',
-  worktime_main: '',
-  social: {},
-  seo: {
-    title: 'Медицинский центр',
-    description: '',
-    keywords: '',
-  },
-  map: {
-    lat: 59.9386,
-    lng: 30.3141,
-    zoom: 16,
-  },
-  og_image_url: '',
-}));
-
-const effectiveSettings = computed(() => {
-  const source = settings.value || {};
-  const fallback = fallbackSettings.value;
-
-  return {
-    site_name: source.site_name || fallback.site_name,
-    phones: Array.isArray(source.phones) && source.phones.length > 0 ? source.phones : fallback.phones,
-    email: source.email || fallback.email,
-    address_main: source.address_main || fallback.address_main,
-    worktime_main: source.worktime_main || fallback.worktime_main,
-    social: source.social || fallback.social,
-    seo: {
-      title: source.seo?.title || fallback.seo.title,
-      description: source.seo?.description || fallback.seo.description,
-      keywords: source.seo?.keywords || fallback.seo.keywords,
-    },
-    map: {
-      lat: Number(source.map?.lat ?? fallback.map.lat),
-      lng: Number(source.map?.lng ?? fallback.map.lng),
-      zoom: Number(source.map?.zoom ?? fallback.map.zoom) || fallback.map.zoom,
-    },
-    og_image_url: source.og_image_url || fallback.og_image_url,
-  };
-});
+const effectiveSettings = computed(() => mergeSiteSettings(settings.value || {}));
 
 const normalizedBlocks = computed(() => {
   const source = Array.isArray(blocks.value) && blocks.value.length > 0
@@ -163,7 +121,7 @@ function resolveSectionProps(block) {
       return {
         subtitle: block.title || 'Комплексная диагностика',
         title: block.content || 'сердца и сосудов',
-        backgroundImage: heroCover,
+        backgroundImage: effectiveSettings.value.media.hero_image_url || heroCover,
         meta,
       };
 
@@ -187,6 +145,7 @@ function resolveSectionProps(block) {
         title: block.title || 'Наши врачи',
         description: block.content || '',
         doctors: doctors.value,
+        teamImage: effectiveSettings.value.media.team_image_url || '',
         meta,
       };
 
@@ -246,11 +205,11 @@ const seoKeywords = computed(() => {
   const raw = effectiveSettings.value.seo.keywords;
   return Array.isArray(raw) ? raw.join(', ') : String(raw || '');
 });
-const ogImageUrl = computed(() => effectiveSettings.value.og_image_url || heroCover);
+const ogImageUrl = computed(() => effectiveSettings.value.og_image_url || effectiveSettings.value.media.hero_image_url || heroCover);
 
 const organizationSchema = computed(() => ({
-  '/context': 'https://schema.org',
-  '/type': 'MedicalOrganization',
+  '@context': 'https://schema.org',
+  '@type': 'MedicalOrganization',
   name: effectiveSettings.value.site_name || 'Медицинский центр',
   description: effectiveSettings.value.seo.description,
   url: canonicalUrl.value,
@@ -258,12 +217,12 @@ const organizationSchema = computed(() => ({
   telephone: effectiveSettings.value.phones?.[0] || '',
   email: effectiveSettings.value.email,
   address: {
-    '/type': 'PostalAddress',
+    '@type': 'PostalAddress',
     streetAddress: effectiveSettings.value.address_main,
     addressCountry: 'RU',
   },
   geo: {
-    '/type': 'GeoCoordinates',
+    '@type': 'GeoCoordinates',
     latitude: effectiveSettings.value.map.lat,
     longitude: effectiveSettings.value.map.lng,
   },
