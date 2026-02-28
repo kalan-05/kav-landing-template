@@ -1,4 +1,4 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="heroTitle">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="heroTitle">
   <title id="heroTitle">Medical Hero Placeholder</title>
   <defs>
     <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
@@ -10,5 +10,5 @@
   <circle cx="1240" cy="220" r="180" fill="#ffffff" fill-opacity="0.08"/>
   <circle cx="320" cy="680" r="220" fill="#f7b24d" fill-opacity="0.12"/>
   <text x="120" y="380" font-family="Arial, sans-serif" font-size="84" fill="#ffffff">Medical landing template</text>
-  <text x="120" y="470" font-family="Arial, sans-serif" font-size="38" fill="#dbe8eb">Hero placeholder. Replace with your clinic photo.</text>
+  <text x="120" y="470" font-family="Arial, sans-serif" font-size="38" fill="#dbe8eb">Hero placeholder. Replace with your project visual.</text>
 </svg>

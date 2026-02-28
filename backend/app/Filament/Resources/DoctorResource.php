@@ -28,11 +28,11 @@ class DoctorResource extends Resource
 
     protected static ?int $navigationSort = 30;
 
-    protected static ?string $navigationLabel = 'Врачи';
+    protected static ?string $navigationLabel = 'Команда';
 
-    protected static ?string $modelLabel = 'Врач';
+    protected static ?string $modelLabel = 'Участник';
 
-    protected static ?string $pluralModelLabel = 'Врачи';
+    protected static ?string $pluralModelLabel = 'Команда';
 
     protected static function canManage(): bool
     {
@@ -64,23 +64,23 @@ class DoctorResource extends Resource
         return $form
             ->schema([
                 TextInput::make('full_name')
-                    ->label('ФИО')
+                    ->label('Имя')
                     ->required()
                     ->maxLength(255),
 
                 TextInput::make('position')
-                    ->label('Должность')
+                    ->label('Роль / должность')
                     ->required()
                     ->maxLength(255),
 
                 TextInput::make('regalia')
-                    ->label('Регалии')
+                    ->label('Короткая подпись')
                     ->maxLength(255),
 
                 FileUpload::make('photo')
-                    ->label('Фото')
+                    ->label('Фото / аватар')
                     ->disk('public')
-                    ->directory('doctors')
+                    ->directory('team')
                     ->image()
                     ->imageEditor()
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
@@ -98,7 +98,7 @@ class DoctorResource extends Resource
                     ->default(0),
 
                 Toggle::make('is_active')
-                    ->label('Активен')
+                    ->label('Показывать на сайте')
                     ->default(true),
             ])
             ->columns(2);
@@ -111,9 +111,9 @@ class DoctorResource extends Resource
             ->reorderable('sort_order')
             ->columns([
                 ImageColumn::make('photo')->label('Фото')->circular(),
-                TextColumn::make('full_name')->label('ФИО')->searchable()->sortable(),
-                TextColumn::make('position')->label('Должность')->searchable(),
-                IconColumn::make('is_active')->label('Активен')->boolean(),
+                TextColumn::make('full_name')->label('Имя')->searchable()->sortable(),
+                TextColumn::make('position')->label('Роль')->searchable()->wrap(),
+                IconColumn::make('is_active')->label('Показывать')->boolean(),
                 TextColumn::make('sort_order')->label('Порядок')->sortable(),
             ])
             ->filters([

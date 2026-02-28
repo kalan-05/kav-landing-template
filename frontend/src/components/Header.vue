@@ -1,33 +1,13 @@
-﻿<template>
+<template>
   <header class="header" data-js-header>
     <div class="header__body">
       <div class="header__body-inner container">
         <div class="logo-block">
-          <RouterLink
-            class="header__logo logo"
-            :to="{ path: '/' }"
-            aria-label="Перейти на главную"
-            title="Перейти на главную"
-            data-goal="cta_click"
-            data-goal-params='{"position":"header","target":"logo"}'
-          >
-            <img
-              class="logo__image"
-              :src="logoSrc"
-              width="275"
-              height="268"
-              :alt="logoImageAlt"
-              title="Перейти на главную страницу"
-            />
+          <RouterLink class="header__logo logo" :to="{ path: '/' }" aria-label="Перейти на главную" title="Перейти на главную" data-goal="cta_click" data-goal-params='{"position":"header","target":"logo"}'>
+            <img class="logo__image" :src="logoSrc" width="275" height="268" :alt="logoImageAlt" title="Перейти на главную страницу" />
           </RouterLink>
 
-          <a
-            class="logo__title"
-            :href="departmentPageUrl"
-            target="_blank"
-            aria-label="Страница отделения"
-            :title="logoTitleText"
-          >
+          <a class="logo__title" :href="departmentPageUrl" target="_blank" aria-label="Страница проекта" :title="logoTitleText">
             <p class="logo__text">
               <template v-for="(line, index) in logoTitleLines" :key="`logo-line-${index}`">
                 {{ line }}
@@ -37,15 +17,7 @@
           </a>
         </div>
 
-        <button
-          class="header__contact-btn"
-          type="button"
-          @click="openExternalBooking"
-          :aria-label="bookingLabel"
-          :title="bookingLabel"
-          data-goal="cta_click"
-          data-goal-params='{"position":"header","cta":"contact_button"}'
-        >
+        <button class="header__contact-btn" type="button" @click="openExternalBooking" :aria-label="bookingLabel" :title="bookingLabel" data-goal="cta_click" data-goal-params='{"position":"header","cta":"contact_button"}'>
           {{ bookingLabel }}
         </button>
 
@@ -53,15 +25,7 @@
           <nav class="header__menu">
             <ul class="header__menu-list">
               <li v-for="(item, index) in menuItems" :key="item.key" class="header__menu-item">
-                <RouterLink
-                  class="header__menu-link"
-                  :class="{ 'is-active': index === 0 }"
-                  :to="{ path: '/', hash: item.hash }"
-                  :aria-label="`Перейти к разделу ${item.label}`"
-                  :title="item.label"
-                  data-goal="cta_click"
-                  :data-goal-params="menuGoalParams(item.key)"
-                >
+                <RouterLink class="header__menu-link" :class="{ 'is-active': index === 0 }" :to="{ path: '/', hash: item.hash }" :aria-label="`Перейти к разделу ${item.label}`" :title="item.label" data-goal="cta_click" :data-goal-params="menuGoalParams(item.key)">
                   <span>{{ item.label }}</span>
                 </RouterLink>
               </li>
@@ -69,15 +33,7 @@
           </nav>
         </div>
 
-        <button
-          class="burger-button visible-mobile"
-          type="button"
-          aria-label="Открыть меню"
-          title="Открыть меню"
-          data-js-header-burger-button
-          data-goal="cta_click"
-          data-goal-params='{"position":"header","cta":"burger_open"}'
-        >
+        <button class="burger-button visible-mobile" type="button" aria-label="Открыть меню" title="Открыть меню" data-js-header-burger-button data-goal="cta_click" data-goal-params='{"position":"header","cta":"burger_open"}'>
           <span class="burger-button__line" aria-hidden="true"></span>
           <span class="burger-button__line" aria-hidden="true"></span>
           <span class="burger-button__line" aria-hidden="true"></span>
@@ -90,7 +46,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import defaultLogoUrl from '@/assets/template/logo-clinic.svg';
+import defaultLogoUrl from '@/assets/template/logo-project.svg';
 import { fetchBlocks } from '@/js/siteContentApi';
 
 const props = defineProps({
@@ -103,84 +59,63 @@ const props = defineProps({
 const blocks = ref([]);
 
 function normalizeMeta(rawMeta) {
-  if (!rawMeta || typeof rawMeta !== 'object') {
-    return {};
-  }
-
+  if (!rawMeta || typeof rawMeta !== 'object') return {};
   if (Array.isArray(rawMeta)) {
     return rawMeta.reduce((acc, row) => {
-      if (!row || typeof row !== 'object') {
-        return acc;
-      }
-
+      if (!row || typeof row !== 'object') return acc;
       const key = String(row.key ?? '').trim();
-      if (!key) {
-        return acc;
-      }
-
+      if (!key) return acc;
       acc[key] = row.value ?? '';
       return acc;
     }, {});
   }
-
   return rawMeta;
 }
 
 function toLines(value, fallback) {
-  const raw = String(value || fallback || '');
-  return raw
+  return String(value || fallback || '')
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
 }
 
 function findBlock(key) {
-  if (!Array.isArray(blocks.value)) {
-    return null;
-  }
-
+  if (!Array.isArray(blocks.value)) return null;
   return blocks.value.find((item) => item?.key === key) || null;
 }
 
 function blockTitle(key, fallback) {
-  const block = findBlock(key);
-  const title = String(block?.title || '').trim();
+  const title = String(findBlock(key)?.title || '').trim();
   return title || fallback;
 }
 
 const headerMeta = computed(() => normalizeMeta(findBlock('header')?.meta));
-const bookingLabel = computed(() => String(headerMeta.value.booking_label || '').trim() || 'Записаться');
-const bookingUrl = computed(() => String(headerMeta.value.booking_url || '').trim() || 'https://example.com/booking');
+const bookingLabel = computed(() => String(headerMeta.value.booking_label || '').trim() || 'Связаться');
+const bookingUrl = computed(() => String(headerMeta.value.booking_url || '').trim() || 'https://example.com/contact');
 const departmentPageUrl = computed(() => String(headerMeta.value.department_url || '').trim() || 'https://example.com/about');
-const logoTitleText = computed(() => String(headerMeta.value.logo_title || '').trim() || props.settings?.site_name || 'Медицинский центр');
+const logoTitleText = computed(() => String(headerMeta.value.logo_title || '').trim() || props.settings?.site_name || 'Экспертный проект');
 const logoTitleLines = computed(() => {
   const customText = String(headerMeta.value.logo_lines || '').trim();
   return toLines(customText, logoTitleText.value);
 });
-const logoImageAlt = computed(() => String(headerMeta.value.logo_alt || '').trim() || 'Логотип медицинского центра');
+const logoImageAlt = computed(() => String(headerMeta.value.logo_alt || '').trim() || 'Логотип проекта');
 const logoSrc = computed(() => props.settings?.media?.logo_url || defaultLogoUrl);
 
 const menuItems = computed(() => [
-  { key: 'about', hash: '#about', label: blockTitle('about', 'О нас') },
-  { key: 'services', hash: '#services', label: blockTitle('services', 'Диагностика') },
-  { key: 'pricing', hash: '#pricing', label: blockTitle('doctors', 'Врачи') },
+  { key: 'about', hash: '#about', label: blockTitle('about', 'О проекте') },
+  { key: 'services', hash: '#services', label: blockTitle('services', 'Предложения') },
+  { key: 'pricing', hash: '#pricing', label: blockTitle('doctors', 'Команда') },
   { key: 'reviews', hash: '#reviews', label: blockTitle('reviews', 'Отзывы') },
   { key: 'contact', hash: '#contact', label: blockTitle('contact', 'Контакты') },
 ]);
 
 function openExternalBooking(event) {
-  if (event && typeof event.preventDefault === 'function') {
-    event.preventDefault();
-  }
-
+  if (event && typeof event.preventDefault === 'function') event.preventDefault();
   window.open(bookingUrl.value, '_blank', 'noopener');
 }
 
 function menuGoalParams(key) {
-  return JSON.stringify({
-    position: 'header_menu',
-    nav: key,
-  });
+  return JSON.stringify({ position: 'header_menu', nav: key });
 }
 
 onMounted(async () => {

@@ -1,6 +1,6 @@
-﻿export default {
-  brand: 'Комплексная диагностика',
-  tagline: 'сердца и сосудов',
+export default {
+  brand: 'Современный сервис',
+  tagline: 'с управляемым контентом',
   phone: '',
   email: '',
   phoneInternational: '',
@@ -15,10 +15,10 @@
   openingHours: '',
   siteUrl: '',
   seo: {
-    title: 'Медицинский центр',
+    title: 'Экспертный проект',
     description: '',
     keywords: [],
-    ogImageAlt: 'Медицинский центр'
+    ogImageAlt: 'Экспертный проект'
   },
   socials: {
     telegram: '',

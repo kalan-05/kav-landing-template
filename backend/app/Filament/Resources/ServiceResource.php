@@ -25,11 +25,11 @@ class ServiceResource extends Resource
 
     protected static ?int $navigationSort = 40;
 
-    protected static ?string $navigationLabel = 'Диагностика';
+    protected static ?string $navigationLabel = 'Предложения';
 
-    protected static ?string $modelLabel = 'Пункт диагностики';
+    protected static ?string $modelLabel = 'Элемент каталога';
 
-    protected static ?string $pluralModelLabel = 'Диагностика';
+    protected static ?string $pluralModelLabel = 'Предложения';
 
     protected static function canManage(): bool
     {
@@ -61,14 +61,14 @@ class ServiceResource extends Resource
         return $form
             ->schema([
                 TextInput::make('title')
-                    ->label('Текст пункта диагностики')
+                    ->label('Название элемента')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
 
                 TextInput::make('group')
                     ->label('Группа / колонка')
-                    ->helperText('Например: Кардиодиагностика, УЗИ и функциональные тесты, левая колонка.')
+                    ->helperText('Например: Основные услуги, Кейсы, FAQ, левая колонка.')
                     ->maxLength(255),
 
                 TextInput::make('sort_order')
@@ -90,7 +90,7 @@ class ServiceResource extends Resource
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->columns([
-                TextColumn::make('title')->label('Пункт диагностики')->searchable()->wrap(),
+                TextColumn::make('title')->label('Элемент')->searchable()->wrap(),
                 TextColumn::make('group')->label('Группа')->sortable()->wrap(),
                 IconColumn::make('is_active')->label('Показывать')->boolean(),
                 TextColumn::make('sort_order')->label('Порядок')->sortable(),

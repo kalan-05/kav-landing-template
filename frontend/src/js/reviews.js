@@ -1,4 +1,4 @@
-﻿const DEFAULT_REVIEW_ENDPOINT = '/api/reviews';
+const DEFAULT_REVIEW_ENDPOINT = '/api/reviews';
 const DEFAULT_REVIEWS_LIST_ENDPOINT = '/api/reviews';
 const HCAPTCHA_SCRIPT_ID = 'hcaptcha-script';
 
@@ -250,10 +250,10 @@ class Reviews {
         const doctorText = String(item.querySelector('.review-doctor')?.textContent || '').trim();
         const text = String(item.querySelector('.review-text')?.textContent || '').trim();
         const rating = item.querySelectorAll('.review-rating .star.filled').length || 5;
-        const doctorPrefix = this.readDatasetValue('doctorPrefix', 'Врач:');
+        const doctorPrefix = this.readDatasetValue('doctorPrefix', 'Участник:');
         const doctor = doctorText.startsWith(doctorPrefix)
           ? doctorText.slice(doctorPrefix.length).trim()
-          : doctorText.replace(/^Врач:\s*/i, '').trim();
+          : doctorText.replace(/^(Врач|Участник):\s*/i, '').trim();
 
         if (!author && !text) {
           return null;
@@ -286,7 +286,7 @@ class Reviews {
   readRuntimeText() {
     return {
       anonymousLabel: this.readDatasetValue('anonymousLabel', 'Аноним'),
-      doctorPrefix: this.readDatasetValue('doctorPrefix', 'Врач:'),
+      doctorPrefix: this.readDatasetValue('doctorPrefix', 'Участник:'),
       captchaMissingMessage: this.readDatasetValue('captchaMissingMessage', 'Капча не настроена. Сообщите администратору сайта.'),
       captchaRequiredMessage: this.readDatasetValue('captchaRequiredMessage', 'Подтвердите, что вы не робот.'),
       spamMessage: this.readDatasetValue('spamMessage', 'Обнаружена спам-активность!'),

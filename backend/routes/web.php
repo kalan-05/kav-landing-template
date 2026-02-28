@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use App\Http\Controllers\Api\ReviewsController;
 use App\Models\SiteSetting;
@@ -16,7 +16,7 @@ $applySeo = static function (string $html) use ($replaceTag): string {
         return $html;
     }
 
-    $title = trim((string) ($settings->seo_title ?: $settings->site_name ?: 'РћР¤Р” в„–1'));
+    $title = trim((string) ($settings->seo_title ?: $settings->site_name ?: 'KAV Landing Template'));
     $description = trim((string) ($settings->seo_description ?: ''));
     $keywords = trim((string) ($settings->seo_keywords ?: ''));
     $siteName = trim((string) ($settings->site_name ?: $title));
@@ -28,7 +28,7 @@ $applySeo = static function (string $html) use ($replaceTag): string {
 
     $schema = [
         '@context' => 'https://schema.org',
-        '@type' => 'MedicalOrganization',
+        '@type' => 'Organization',
         'name' => $siteName,
         'url' => $canonicalUrl,
         'telephone' => $primaryPhone,

@@ -16,7 +16,7 @@ const DEFAULT_MEDIA = {
 };
 
 export const defaultSiteSettings = {
-  site_name: 'Медицинский центр',
+  site_name: 'Экспертный проект',
   phones: [],
   email: '',
   address_main: '',
@@ -24,7 +24,7 @@ export const defaultSiteSettings = {
   social: {},
   media: DEFAULT_MEDIA,
   seo: {
-    title: 'Медицинский центр',
+    title: 'Экспертный проект',
     description: '',
     keywords: '',
   },

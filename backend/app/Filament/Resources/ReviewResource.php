@@ -67,7 +67,7 @@ class ReviewResource extends Resource
                     ->maxLength(120),
 
                 Select::make('doctor_id')
-                    ->label('Врач')
+                    ->label('Связанный участник')
                     ->relationship('doctor', 'full_name')
                     ->searchable()
                     ->preload(),
@@ -100,7 +100,7 @@ class ReviewResource extends Resource
                     ->options([
                         'draft' => 'Черновик',
                         'published' => 'Опубликован',
-                        'rejected' => 'Отклонён',
+                        'rejected' => 'Отклонен',
                     ]),
 
                 DateTimePicker::make('published_at')
@@ -126,7 +126,7 @@ class ReviewResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('author_name')->label('Автор')->searchable()->sortable(),
-                TextColumn::make('doctor.full_name')->label('Врач')->placeholder('—')->searchable(),
+                TextColumn::make('doctor.full_name')->label('Участник')->placeholder('—')->searchable(),
                 TextColumn::make('rating')->label('Оценка')->sortable(),
                 TextColumn::make('source')
                     ->label('Источник')
@@ -148,7 +148,7 @@ class ReviewResource extends Resource
                     ->options([
                         'draft' => 'Черновик',
                         'published' => 'Опубликован',
-                        'rejected' => 'Отклонён',
+                        'rejected' => 'Отклонен',
                     ]),
                 SelectFilter::make('source')
                     ->label('Источник')

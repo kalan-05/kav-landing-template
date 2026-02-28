@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Database\Seeders;
 
@@ -17,12 +17,12 @@ class InitialContentSeeder extends Seeder
         SiteSetting::query()->updateOrCreate(
             ['id' => 1],
             [
-                'site_name' => 'Клиника экспертной диагностики',
+                'site_name' => 'Экспертный проект',
                 'phone_1' => '+7 900 000-00-00',
                 'phone_2' => '+7 900 000-00-01',
                 'email' => 'info@example.com',
                 'address_main' => 'Санкт-Петербург, Невский проспект, 1',
-                'worktime_main' => 'Ежедневно с 09:00 до 20:00',
+                'worktime_main' => 'Пн-Пт с 10:00 до 19:00',
                 'social' => [
                     'tg' => '',
                     'wa' => '',
@@ -32,9 +32,9 @@ class InitialContentSeeder extends Seeder
                 'hero_image' => null,
                 'team_image' => null,
                 'developer_logo' => null,
-                'seo_title' => 'Клиника экспертной диагностики',
-                'seo_description' => 'Шаблон медицинского сайта на Laravel, Filament и Vue 3.',
-                'seo_keywords' => 'медицинский центр, диагностика, узи, консультации',
+                'seo_title' => 'Экспертный проект',
+                'seo_description' => 'Универсальный шаблон сайта на Laravel, Filament и Vue 3.',
+                'seo_keywords' => 'шаблон сайта, laravel, filament, vue, корпоративный лендинг',
                 'map_lat' => 59.9386,
                 'map_lng' => 30.3141,
                 'map_zoom' => 16,
@@ -57,53 +57,53 @@ class InitialContentSeeder extends Seeder
                 'sort_order' => 5,
                 'meta' => [
                     'section_id' => 'header',
-                    'booking_label' => 'Записаться',
-                    'booking_url' => 'https://example.com/booking',
+                    'booking_label' => 'Связаться',
+                    'booking_url' => 'https://example.com/contact',
                     'department_url' => 'https://example.com/about',
-                    'logo_title' => 'Клиника экспертной диагностики',
-                    'logo_lines' => "КЛИНИКА\nЭКСПЕРТНОЙ\nДИАГНОСТИКИ",
-                    'logo_alt' => 'Логотип клиники',
+                    'logo_title' => 'Экспертный проект',
+                    'logo_lines' => "ЭКСПЕРТНЫЙ\nПРОЕКТ",
+                    'logo_alt' => 'Логотип проекта',
                 ],
             ],
             [
                 'key' => 'hero',
-                'title' => 'Комплексная диагностика',
-                'content' => 'и консультации специалистов',
+                'title' => 'Современный сервис',
+                'content' => 'с управляемым контентом',
                 'is_enabled' => true,
                 'sort_order' => 10,
                 'meta' => ['section_id' => 'hero'],
             ],
             [
                 'key' => 'about',
-                'title' => 'О нас',
-                'content' => 'Современный медицинский центр с удобной записью, сильной командой и прозрачной коммуникацией.',
+                'title' => 'О проекте',
+                'content' => 'Гибкий шаблон для запуска корпоративного, сервисного или экспертного лендинга.',
                 'is_enabled' => true,
                 'sort_order' => 20,
                 'meta' => [
                     'section_id' => 'about',
                     'content_alignment' => 'left',
-                    'block1_title' => 'Почему выбирают нас',
-                    'block1_items' => "Экспертная диагностика\nСовременное оборудование\nУдобная запись без лишних шагов",
-                    'block1_history_title' => 'Подход к работе',
-                    'block1_history_text' => 'Шаблон подходит для клиник, диагностических центров и частных кабинетов.',
-                    'history_text' => "Все ключевые тексты и списки редактируются через админку.\nСтруктура подходит под медицинский лендинг с акцентом на доверие и SEO.",
+                    'block1_title' => 'Почему это удобно',
+                    'block1_items' => "Управляемый контент\nБыстрый запуск\nЧистая структура проекта",
+                    'block1_history_title' => 'Как использовать шаблон',
+                    'block1_history_text' => 'Этот starter подходит для корпоративных сайтов, экспертных сервисов и продуктовых лендингов.',
+                    'history_text' => "Все ключевые тексты и списки редактируются через админку.\nСтруктура помогает быстро запускать новые сайты без ручной правки кода под каждый блок.",
                     'block2_title' => 'Что можно показать в этом блоке',
-                    'block2_group1_title' => 'Для пациента',
-                    'block2_group1_items' => "Преимущества центра\nНаправления работы\nФорматы консультаций",
-                    'block2_group2_title' => 'Для SEO и доверия',
-                    'block2_group2_items' => "Опыт команды\nОписание оборудования\nПодтверждение экспертности",
-                    'block3_lead' => 'Секция легко адаптируется под структуру конкретной клиники.',
-                    'block3_diagnosis' => 'Можно рассказать о диагностике, профилактике, консультациях и маршруте пациента.',
+                    'block2_group1_title' => 'Для клиента',
+                    'block2_group1_items' => "Преимущества\nНаправления работы\nФорматы сотрудничества",
+                    'block2_group2_title' => 'Для доверия и SEO',
+                    'block2_group2_items' => "Опыт команды\nКейсы\nПрозрачный процесс запуска",
+                    'block3_lead' => 'Секция легко адаптируется под структуру конкретного проекта.',
+                    'block3_diagnosis' => 'Можно рассказать о продукте, услугах, кейсах, процессах и точках контакта.',
                     'block3_text' => 'Тексты разбиты на управляемые поля, чтобы не приходилось менять код ради каждого абзаца.',
                     'block4_title' => 'Что входит в шаблон',
                     'block4_items' => "Laravel backend\nFilament admin\nVue storefront\nОтзывы с модерацией\nSEO-базис и адаптив",
-                    'final_text' => "Шаблон можно использовать как базу для нового проекта.\nПосле запуска замените demo-контент на реальные данные клиента.",
+                    'final_text' => "Шаблон можно использовать как основу для нового проекта.\nПосле запуска замените demo-контент на реальные данные клиента.",
                 ],
             ],
             [
                 'key' => 'services',
-                'title' => 'Диагностика',
-                'content' => 'Основные направления центра. Список редактируется в отдельной сущности и отображается без пересборки витрины.',
+                'title' => 'Предложения',
+                'content' => 'Основные предложения, форматы работы или элементы каталога. Список редактируется отдельно и отображается без пересборки витрины.',
                 'is_enabled' => true,
                 'sort_order' => 30,
                 'meta' => [
@@ -113,15 +113,15 @@ class InitialContentSeeder extends Seeder
             ],
             [
                 'key' => 'doctors',
-                'title' => 'Врачи',
-                'content' => 'Команда специалистов, которые ведут прием, диагностику и сопровождение пациента.',
+                'title' => 'Команда',
+                'content' => 'Люди, которые формируют продукт, поддерживают клиентов и отвечают за результат.',
                 'is_enabled' => true,
                 'sort_order' => 40,
                 'meta' => [
                     'section_id' => 'pricing',
-                    'subtitle' => 'НАША КОМАНДА',
-                    'team_count_label' => 'Команда специалистов',
-                    'team_image_alt' => 'Команда клиники',
+                    'subtitle' => 'КЛЮЧЕВЫЕ УЧАСТНИКИ',
+                    'team_count_label' => 'Команда проекта',
+                    'team_image_alt' => 'Команда проекта',
                     'content_alignment' => 'center',
                     'subtitle_alignment' => 'center',
                     'team_heading_alignment' => 'center',
@@ -147,7 +147,7 @@ class InitialContentSeeder extends Seeder
                 'sort_order' => 60,
                 'meta' => [
                     'section_id' => 'reviews',
-                    'doctor_prefix' => 'Врач:',
+                    'doctor_prefix' => 'Участник:',
                     'prev_label' => '← Назад',
                     'next_label' => 'Вперед →',
                     'prev_aria_label' => 'Предыдущие отзывы',
@@ -155,8 +155,8 @@ class InitialContentSeeder extends Seeder
                     'form_title' => 'Добавить отзыв',
                     'name_label' => 'Ваше имя:',
                     'name_placeholder' => 'Введите ваше имя',
-                    'doctor_label' => 'Выберите врача:',
-                    'doctor_placeholder' => '-- Выберите врача --',
+                    'doctor_label' => 'Выберите участника:',
+                    'doctor_placeholder' => '-- Выберите участника --',
                     'rating_label' => 'Оценка (1-5):',
                     'rating_placeholder' => 'Оцените от 1 до 5',
                     'review_text_label' => 'Текст отзыва:',
@@ -175,13 +175,13 @@ class InitialContentSeeder extends Seeder
                             'author_name' => 'Елена',
                             'doctor_name' => 'Анна Смирнова',
                             'rating' => 5,
-                            'text' => 'Понравилась четкая организация и внимательное отношение к пациенту.',
+                            'text' => 'Понравилась четкая организация, понятная коммуникация и быстрый старт проекта.',
                         ],
                         [
                             'author_name' => 'Игорь',
                             'doctor_name' => 'Иван Петров',
                             'rating' => 5,
-                            'text' => 'Удобная запись, понятные рекомендации и аккуратная работа администратора.',
+                            'text' => 'Удобная структура, прозрачный процесс и аккуратная реализация без лишних шагов.',
                         ],
                     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 ],
@@ -205,15 +205,15 @@ class InitialContentSeeder extends Seeder
                 'meta' => [
                     'section_id' => 'map-section',
                     'menu_label' => 'Карта',
-                    'map_aria_label' => 'Карта проезда клиники',
+                    'map_aria_label' => 'Карта проезда',
                     'fallback_text' => 'Не удалось загрузить интерактивную карту.',
-                    'fallback_link_text' => 'Открыть место на Яндекс.Картах',
+                    'fallback_link_text' => 'Открыть адрес на карте',
                 ],
             ],
             [
                 'key' => 'footer',
-                'title' => 'Клиника экспертной диагностики',
-                'content' => 'Диагностика, консультации и профилактика для частных клиник и медицинских центров.',
+                'title' => 'Экспертный проект',
+                'content' => 'Сервис, кейсы и контактная информация для нового клиента.',
                 'is_enabled' => true,
                 'sort_order' => 90,
                 'meta' => [
@@ -231,10 +231,10 @@ class InitialContentSeeder extends Seeder
         }
 
         $doctors = [
-            ['full_name' => 'Анна Смирнова', 'position' => 'Врач ультразвуковой диагностики', 'regalia' => 'к.м.н.'],
-            ['full_name' => 'Иван Петров', 'position' => 'Кардиолог', 'regalia' => null],
-            ['full_name' => 'Мария Волкова', 'position' => 'Врач функциональной диагностики', 'regalia' => null],
-            ['full_name' => 'Ольга Соколова', 'position' => 'Терапевт', 'regalia' => null],
+            ['full_name' => 'Анна Смирнова', 'position' => 'Руководитель проекта', 'regalia' => 'Стратегия'],
+            ['full_name' => 'Иван Петров', 'position' => 'Продуктовый эксперт', 'regalia' => 'Запуск'],
+            ['full_name' => 'Мария Волкова', 'position' => 'Менеджер по работе с клиентами', 'regalia' => 'Коммуникация'],
+            ['full_name' => 'Ольга Соколова', 'position' => 'Аналитик', 'regalia' => 'Исследования'],
         ];
 
         $doctorIdsByName = [];
@@ -244,7 +244,7 @@ class InitialContentSeeder extends Seeder
                 ['full_name' => $doctorData['full_name']],
                 [
                     ...$doctorData,
-                    'description' => 'Demo-профиль врача. Замените текст, должность и фотографию через админку.',
+                    'description' => 'Demo-профиль участника. Замените имя, роль, описание и фотографию через админку.',
                     'photo' => null,
                     'sort_order' => ($index + 1) * 10,
                     'is_active' => true,
@@ -255,12 +255,12 @@ class InitialContentSeeder extends Seeder
         }
 
         $services = [
-            ['title' => 'Первичный прием', 'group' => 'Консультации'],
-            ['title' => 'Повторный прием', 'group' => 'Консультации'],
-            ['title' => 'УЗИ органов брюшной полости', 'group' => 'УЗИ'],
-            ['title' => 'ЭКГ', 'group' => 'Функциональная диагностика'],
-            ['title' => 'Суточное мониторирование ЭКГ', 'group' => 'Функциональная диагностика'],
-            ['title' => 'Check-up программы', 'group' => 'Комплексные услуги'],
+            ['title' => 'Стратегическая сессия', 'group' => 'Консультации'],
+            ['title' => 'Аудит проекта', 'group' => 'Консультации'],
+            ['title' => 'Запуск лендинга', 'group' => 'Запуск'],
+            ['title' => 'Контент-поддержка', 'group' => 'Поддержка'],
+            ['title' => 'SEO-базис', 'group' => 'Поддержка'],
+            ['title' => 'Интеграция форм и заявок', 'group' => 'Технические работы'],
         ];
 
         foreach ($services as $index => $serviceData) {
@@ -278,19 +278,19 @@ class InitialContentSeeder extends Seeder
             [
                 'author_name' => 'Елена',
                 'rating' => 5,
-                'text' => 'Понравилась четкая организация и внимательное отношение к пациенту.',
+                'text' => 'Понравилась четкая организация, понятная коммуникация и быстрый запуск.',
                 'doctor_id' => $doctorIdsByName['Анна Смирнова'] ?? null,
             ],
             [
                 'author_name' => 'Игорь',
                 'rating' => 5,
-                'text' => 'Удобная запись, понятные рекомендации и аккуратная работа администратора.',
+                'text' => 'Удобная структура, прозрачный процесс и аккуратная реализация.',
                 'doctor_id' => $doctorIdsByName['Иван Петров'] ?? null,
             ],
             [
                 'author_name' => 'Марина',
                 'rating' => 4,
-                'text' => 'Хороший demo-отзыв для стартового наполнения шаблона.',
+                'text' => 'Хороший demo-отзыв для стартового наполнения универсального шаблона.',
                 'doctor_id' => $doctorIdsByName['Мария Волкова'] ?? null,
             ],
         ];

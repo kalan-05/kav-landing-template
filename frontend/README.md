@@ -1,6 +1,6 @@
-﻿# Frontend
+# Frontend
 
-Vue 3 + Vite storefront for the KAV medical landing template.
+Vue 3 + Vite storefront for the KAV universal landing template.
 
 ## Commands
 
@@ -20,5 +20,7 @@ Frontend loads content from Laravel API:
 - `/api/services`
 - `/api/gallery`
 - `/api/reviews`
+
+Technical API names `doctors` and `services` are kept for compatibility, while the admin UI uses universal labels `Команда` and `Предложения`.
 
 Set `VITE_API_BASE_URL` only when frontend and backend live on different origins.

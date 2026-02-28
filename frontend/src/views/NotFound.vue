@@ -1,8 +1,8 @@
-﻿<script setup>
+<script setup>
 import { useHead } from '@unhead/vue';
 
 useHead({
-  title: '404 - Страница не найдена | Медицинский template',
+  title: '404 - Страница не найдена | KAV Landing Template',
   meta: [
     { name: 'robots', content: 'noindex, nofollow, noarchive' },
   ],

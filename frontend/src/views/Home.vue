@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { computed, onMounted, ref } from 'vue';
 import { useHead } from '@unhead/vue';
 
@@ -22,21 +22,14 @@ const services = ref([]);
 const galleryItems = ref([]);
 
 const fallbackBlocks = [
-  { key: 'hero', title: 'Комплексная диагностика', content: 'сердца и сосудов', is_enabled: true, sort_order: 10, meta: { section_id: 'hero' } },
-  { key: 'about', title: 'О нас', content: '', is_enabled: true, sort_order: 20, meta: { section_id: 'about' } },
-  { key: 'services', title: 'Диагностика', content: '', is_enabled: true, sort_order: 30, meta: { section_id: 'services' } },
-  { key: 'doctors', title: 'Наши врачи', content: '', is_enabled: true, sort_order: 40, meta: { section_id: 'pricing' } },
+  { key: 'hero', title: 'Современный сервис', content: 'с управляемым контентом', is_enabled: true, sort_order: 10, meta: { section_id: 'hero' } },
+  { key: 'about', title: 'О проекте', content: '', is_enabled: true, sort_order: 20, meta: { section_id: 'about' } },
+  { key: 'services', title: 'Предложения', content: '', is_enabled: true, sort_order: 30, meta: { section_id: 'services' } },
+  { key: 'doctors', title: 'Команда', content: '', is_enabled: true, sort_order: 40, meta: { section_id: 'pricing' } },
   { key: 'gallery', title: 'Галерея', content: '', is_enabled: true, sort_order: 50, meta: { section_id: 'gallery' } },
   { key: 'reviews', title: 'Отзывы', content: '', is_enabled: true, sort_order: 60, meta: { section_id: 'reviews' } },
   { key: 'contact', title: 'Контакты', content: '', is_enabled: true, sort_order: 70, meta: { section_id: 'contact' } },
-  {
-    key: 'map',
-    title: 'Как нас найти',
-    content: 'Медицинский центр',
-    is_enabled: true,
-    sort_order: 80,
-    meta: { section_id: 'map-section' },
-  },
+  { key: 'map', title: 'Как нас найти', content: 'Контактная информация', is_enabled: true, sort_order: 80, meta: { section_id: 'map-section' } },
 ];
 
 const sectionRegistry = {
@@ -51,10 +44,7 @@ const sectionRegistry = {
 };
 
 function normalizeBlockMeta(rawMeta) {
-  if (!rawMeta) {
-    return {};
-  }
-
+  if (!rawMeta) return {};
   if (typeof rawMeta === 'string') {
     try {
       const parsed = JSON.parse(rawMeta);
@@ -63,23 +53,15 @@ function normalizeBlockMeta(rawMeta) {
       return {};
     }
   }
-
   if (Array.isArray(rawMeta)) {
     return rawMeta.reduce((acc, row) => {
-      if (!row || typeof row !== 'object') {
-        return acc;
-      }
-
+      if (!row || typeof row !== 'object') return acc;
       const key = String(row.key ?? row.name ?? '').trim();
-      if (!key) {
-        return acc;
-      }
-
+      if (!key) return acc;
       acc[key] = row.value ?? row.val ?? '';
       return acc;
     }, {});
   }
-
   return typeof rawMeta === 'object' ? rawMeta : {};
 }
 
@@ -90,13 +72,8 @@ function getBlockMeta(block) {
 const effectiveSettings = computed(() => mergeSiteSettings(settings.value || {}));
 
 const normalizedBlocks = computed(() => {
-  const source = Array.isArray(blocks.value) && blocks.value.length > 0
-    ? blocks.value
-    : fallbackBlocks;
-
-  return source
-    .filter((block) => block && sectionRegistry[block.key])
-    .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
+  const source = Array.isArray(blocks.value) && blocks.value.length > 0 ? blocks.value : fallbackBlocks;
+  return source.filter((block) => block && sectionRegistry[block.key]).sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
 });
 
 function resolveSectionId(block) {
@@ -104,11 +81,7 @@ function resolveSectionId(block) {
   const registry = key ? sectionRegistry[key] : null;
   const meta = getBlockMeta(block);
   const fromMeta = meta.section_id;
-
-  if (typeof fromMeta === 'string' && fromMeta.trim() !== '') {
-    return fromMeta.trim();
-  }
-
+  if (typeof fromMeta === 'string' && fromMeta.trim() !== '') return fromMeta.trim();
   return registry?.defaultId || key || 'section';
 }
 
@@ -118,81 +91,27 @@ function resolveSectionProps(block) {
 
   switch (key) {
     case 'hero':
-      return {
-        subtitle: block.title || 'Комплексная диагностика',
-        title: block.content || 'сердца и сосудов',
-        backgroundImage: effectiveSettings.value.media.hero_image_url || heroCover,
-        meta,
-      };
-
+      return { subtitle: block.title || 'Современный сервис', title: block.content || 'с управляемым контентом', backgroundImage: effectiveSettings.value.media.hero_image_url || heroCover, meta };
     case 'about':
-      return {
-        title: block.title || 'О нас',
-        content: block.content || '',
-        meta,
-      };
-
+      return { title: block.title || 'О проекте', content: block.content || '', meta };
     case 'services':
-      return {
-        title: block.title || 'Диагностика',
-        description: block.content || '',
-        items: services.value,
-        meta,
-      };
-
+      return { title: block.title || 'Предложения', description: block.content || '', items: services.value, meta };
     case 'doctors':
-      return {
-        title: block.title || 'Наши врачи',
-        description: block.content || '',
-        doctors: doctors.value,
-        teamImage: effectiveSettings.value.media.team_image_url || '',
-        meta,
-      };
-
+      return { title: block.title || 'Команда', description: block.content || '', doctors: doctors.value, teamImage: effectiveSettings.value.media.team_image_url || '', meta };
     case 'gallery':
-      return {
-        title: block.title || 'Галерея',
-        items: galleryItems.value,
-        meta,
-      };
-
+      return { title: block.title || 'Галерея', items: galleryItems.value, meta };
     case 'reviews':
-      return {
-        title: block.title || 'Отзывы',
-        doctors: doctors.value,
-        meta,
-      };
-
+      return { title: block.title || 'Отзывы', doctors: doctors.value, meta };
     case 'contact':
-      return {
-        title: block.title || 'Контакты',
-        settings: effectiveSettings.value,
-        meta,
-      };
-
+      return { title: block.title || 'Контакты', settings: effectiveSettings.value, meta };
     case 'map':
-      return {
-        title: block.title || 'Как нас найти',
-        subtitle: meta.subtitle || block.content || 'Медицинский центр',
-        settings: effectiveSettings.value,
-        meta,
-      };
-
+      return { title: block.title || 'Как нас найти', subtitle: meta.subtitle || block.content || 'Контактная информация', settings: effectiveSettings.value, meta };
     default:
       return {};
   }
 }
 
-const sectionsToRender = computed(() =>
-  normalizedBlocks.value
-    .filter((block) => block.is_enabled !== false)
-    .map((block) => ({
-      key: block.key,
-      component: sectionRegistry[block.key].component,
-      id: resolveSectionId(block),
-      props: resolveSectionProps(block),
-    }))
-);
+const sectionsToRender = computed(() => normalizedBlocks.value.filter((block) => block.is_enabled !== false).map((block) => ({ key: block.key, component: sectionRegistry[block.key].component, id: resolveSectionId(block), props: resolveSectionProps(block) })));
 
 const envSiteUrl = String(import.meta.env.VITE_SITE_URL || '').trim();
 const canonicalBaseUrl = computed(() => {
@@ -201,16 +120,13 @@ const canonicalBaseUrl = computed(() => {
 });
 const canonicalUrl = computed(() => (canonicalBaseUrl.value ? `${canonicalBaseUrl.value}/` : ''));
 const sameAs = computed(() => Object.values(effectiveSettings.value.social || {}).filter(Boolean));
-const seoKeywords = computed(() => {
-  const raw = effectiveSettings.value.seo.keywords;
-  return Array.isArray(raw) ? raw.join(', ') : String(raw || '');
-});
+const seoKeywords = computed(() => Array.isArray(effectiveSettings.value.seo.keywords) ? effectiveSettings.value.seo.keywords.join(', ') : String(effectiveSettings.value.seo.keywords || ''));
 const ogImageUrl = computed(() => effectiveSettings.value.og_image_url || effectiveSettings.value.media.hero_image_url || heroCover);
 
 const organizationSchema = computed(() => ({
   '@context': 'https://schema.org',
-  '@type': 'MedicalOrganization',
-  name: effectiveSettings.value.site_name || 'Медицинский центр',
+  '@type': 'Organization',
+  name: effectiveSettings.value.site_name || 'Экспертный проект',
   description: effectiveSettings.value.seo.description,
   url: canonicalUrl.value,
   image: ogImageUrl.value,
@@ -246,24 +162,16 @@ useHead(() => ({
     { name: 'twitter:description', content: effectiveSettings.value.seo.description },
     { name: 'twitter:image', content: ogImageUrl.value },
   ],
-  link: canonicalUrl.value
-    ? [
-      { rel: 'canonical', href: canonicalUrl.value },
-      { rel: 'alternate', hreflang: 'ru-RU', href: canonicalUrl.value },
-      { rel: 'alternate', hreflang: 'x-default', href: canonicalUrl.value },
-    ]
-    : [],
-  script: [
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify(organizationSchema.value),
-    },
-  ],
+  link: canonicalUrl.value ? [
+    { rel: 'canonical', href: canonicalUrl.value },
+    { rel: 'alternate', hreflang: 'ru-RU', href: canonicalUrl.value },
+    { rel: 'alternate', hreflang: 'x-default', href: canonicalUrl.value },
+  ] : [],
+  script: [{ type: 'application/ld+json', children: JSON.stringify(organizationSchema.value) }],
 }));
 
 onMounted(async () => {
   const content = await fetchSiteContent();
-
   settings.value = content.settings;
   blocks.value = Array.isArray(content.blocks) ? content.blocks : [];
   doctors.value = Array.isArray(content.doctors) ? content.doctors : [];
@@ -273,13 +181,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <component
-    :is="section.component"
-    v-for="section in sectionsToRender"
-    :key="section.key"
-    :id="section.id"
-    v-bind="section.props"
-  />
+  <component :is="section.component" v-for="section in sectionsToRender" :key="section.key" :id="section.id" v-bind="section.props" />
 </template>
-
-

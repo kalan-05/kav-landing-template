@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Http\Controllers\Api;
 
@@ -50,7 +50,7 @@ class ReviewsController extends Controller
 
             return response()->json([
                 'status' => 'ok',
-                'message' => 'РћС‚Р·С‹РІ РїСЂРёРЅСЏС‚ РЅР° РјРѕРґРµСЂР°С†РёСЋ',
+                'message' => 'Отзыв принят на модерацию',
             ]);
         }
 
@@ -58,8 +58,8 @@ class ReviewsController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $this->captchaVerifier->isConfigured()
-                    ? 'РџРѕРґС‚РІРµСЂРґРёС‚Рµ, С‡С‚Рѕ РІС‹ РЅРµ СЂРѕР±РѕС‚.'
-                    : 'РљР°РїС‡Р° РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРЅР°. РћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ.',
+                    ? 'Подтвердите, что вы не робот.'
+                    : 'Капча временно недоступна. Обратитесь к администратору.',
             ], $this->captchaVerifier->isConfigured() ? 422 : 503);
         }
 
@@ -86,7 +86,7 @@ class ReviewsController extends Controller
 
         return response()->json([
             'status' => 'ok',
-            'message' => 'РћС‚Р·С‹РІ РїСЂРёРЅСЏС‚ РЅР° РјРѕРґРµСЂР°С†РёСЋ',
+            'message' => 'Отзыв принят на модерацию',
         ]);
     }
 
@@ -95,7 +95,7 @@ class ReviewsController extends Controller
         if (filled($request->input('antispam'))) {
             Log::notice('Legacy reviews honeypot triggered', ['ip' => $request->ip()]);
 
-            return response('РћР±РЅР°СЂСѓР¶РµРЅР° СЃРїР°Рј-Р°РєС‚РёРІРЅРѕСЃС‚СЊ', 400, [
+            return response('Обнаружена спам-активность', 400, [
                 'Content-Type' => 'text/plain; charset=UTF-8',
             ]);
         }
@@ -103,8 +103,8 @@ class ReviewsController extends Controller
         if (! $this->passesCaptcha($request)) {
             return response(
                 $this->captchaVerifier->isConfigured()
-                    ? 'РџРѕРґС‚РІРµСЂРґРёС‚Рµ, С‡С‚Рѕ РІС‹ РЅРµ СЂРѕР±РѕС‚.'
-                    : 'РљР°РїС‡Р° РІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕСЃС‚СѓРїРЅР°. РћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ.',
+                    ? 'Подтвердите, что вы не робот.'
+                    : 'Капча временно недоступна. Обратитесь к администратору.',
                 $this->captchaVerifier->isConfigured() ? 422 : 503,
                 ['Content-Type' => 'text/plain; charset=UTF-8']
             );
@@ -119,16 +119,16 @@ class ReviewsController extends Controller
 
         if ($validator->fails()) {
             $errors = $validator->errors();
-            $message = 'РџСЂРѕРІРµСЂСЊС‚Рµ РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ Р·Р°РїРѕР»РЅРµРЅРёСЏ С„РѕСЂРјС‹.';
+            $message = 'Проверьте корректность заполнения формы.';
 
             if ($errors->has('userName')) {
-                $message = 'РРјСЏ РґРѕР»Р¶РЅРѕ СЃРѕРґРµСЂР¶Р°С‚СЊ РјРёРЅРёРјСѓРј 2 СЃРёРјРІРѕР»Р°.';
+                $message = 'Имя должно содержать минимум 2 символа.';
             } elseif ($errors->has('doctorSelect')) {
-                $message = 'РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІС‹Р±РµСЂРёС‚Рµ РєРѕСЂСЂРµРєС‚РЅРѕРіРѕ РІСЂР°С‡Р°.';
+                $message = 'Пожалуйста, выберите корректного участника.';
             } elseif ($errors->has('reviewRating')) {
-                $message = 'РќРµРєРѕСЂСЂРµРєС‚РЅР°СЏ РѕС†РµРЅРєР° (РґРѕРїСѓСЃС‚РёРјРѕ РѕС‚ 1 РґРѕ 5).';
+                $message = 'Некорректная оценка (допустимо от 1 до 5).';
             } elseif ($errors->has('reviewText')) {
-                $message = 'РўРµРєСЃС‚ РѕС‚Р·С‹РІР° РґРѕР»Р¶РµРЅ СЃРѕРґРµСЂР¶Р°С‚СЊ РјРёРЅРёРјСѓРј 10 СЃРёРјРІРѕР»РѕРІ.';
+                $message = 'Текст отзыва должен содержать минимум 10 символов.';
             }
 
             return response($message, 422, [
@@ -158,7 +158,7 @@ class ReviewsController extends Controller
 
         $this->notifyAdmin($review);
 
-        return response('РЎРїР°СЃРёР±Рѕ! РћС‚Р·С‹РІ РїСЂРёРЅСЏС‚ РЅР° РјРѕРґРµСЂР°С†РёСЋ.', 200, [
+        return response('Спасибо! Отзыв принят на модерацию.', 200, [
             'Content-Type' => 'text/plain; charset=UTF-8',
         ]);
     }
@@ -230,12 +230,12 @@ class ReviewsController extends Controller
             return;
         }
 
-        $doctorName = optional($review->doctor)->full_name ?? 'РќРµ СѓРєР°Р·Р°РЅ';
-        $body = "РќРѕРІС‹Р№ РѕС‚Р·С‹РІ СЃ СЃР°Р№С‚Р°\n\n"
-            . "РђРІС‚РѕСЂ: {$review->author_name}\n"
-            . "РћС†РµРЅРєР°: {$review->rating}\n"
-            . "Р’СЂР°С‡: {$doctorName}\n"
-            . "РўРµРєСЃС‚:\n{$review->text}\n";
+        $doctorName = optional($review->doctor)->full_name ?? 'Не указан';
+        $body = "Новый отзыв с сайта\n\n"
+            . "Автор: {$review->author_name}\n"
+            . "Оценка: {$review->rating}\n"
+            . "Участник: {$doctorName}\n"
+            . "Текст:\n{$review->text}\n";
 
         try {
             Mail::raw($body, static function ($message) use ($recipient): void {
@@ -250,5 +250,3 @@ class ReviewsController extends Controller
         }
     }
 }
-
-

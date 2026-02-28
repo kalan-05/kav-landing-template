@@ -1,63 +1,66 @@
-﻿# Редактирование текста через админку (KAV Landing Template)
+# Редактирование текста через админку (KAV Landing Template)
 
-Теперь витрина читает текст из `PageBlocks` + `SiteSettings`.
+Витрина читает текст из `PageBlocks` и `SiteSettings`.
 
 ## 1) Основные блоки (`Сайт -> Блоки страницы`)
 - `hero`
-  - `title` -> верхняя строка на первом экране
+  - `title` -> верхняя строка первого экрана
   - `content` -> главный заголовок
 - `about`
   - `title` -> заголовок секции
   - `content` -> вводный абзац
-  - остальные тексты секции `О нас` -> через `meta` (ключи ниже)
+  - остальные тексты секции `О проекте` -> через `meta`
 - `services`
   - `title`, `content`
-  - список услуг берется из `Сайт -> Услуги`
+  - список элементов берется из `Сайт -> Предложения`
 - `doctors`
   - `title`, `content`
-  - врачи берутся из `Сайт -> Врачи`
+  - карточки команды берутся из `Сайт -> Команда`
 - `gallery`
-  - кнопки слайдера можно менять через `meta`
-  - фото берутся из `Сайт -> Галерея`
+  - кнопки слайдера меняются через `meta`
+  - изображения берутся из `Сайт -> Галерея`
 - `reviews`
-  - заголовок и все подписи формы через `meta`
+  - заголовок и подписи формы идут через `meta`
   - опубликованные отзывы берутся из API `/api/reviews`
 - `contact`
   - `title`
   - контакты берутся из `Сайт -> Настройки сайта`
 - `map`
-  - `title` -> большой заголовок над картой
-  - `content` или `meta.subtitle` -> подзаголовок
+  - `title` -> заголовок над картой
+  - `content` или `meta.subtitle` -> подпись под картой
+- `header`
+  - служебный блок шапки
+- `footer`
+  - служебный блок footer
 
-## 2) Дополнительные (опциональные) блоки
-Можно создать блоки:
-- `header` (для текста шапки)
-- `footer` (для текста футера)
-
-## 3) Meta-ключи
+## 2) Meta-ключи
 
 ### `about` meta
 - `block1_title`
-- `block1_items` (каждый пункт с новой строки)
+- `block1_items`
 - `block1_history_title`
 - `block1_history_text`
-- `history_text` (абзацы с новой строки)
+- `history_text`
 - `block2_title`
 - `block2_group1_title`
-- `block2_group1_items` (строка = пункт)
+- `block2_group1_items`
 - `block2_group2_title`
-- `block2_group2_items` (строка = пункт)
+- `block2_group2_items`
 - `block3_lead`
 - `block3_diagnosis`
 - `block3_text`
 - `block4_title`
-- `block4_items` (строка = пункт)
-- `final_text` (абзацы с новой строки)
+- `block4_items`
+- `final_text`
 
 ### `doctors` meta
+Технический ключ секции сохранен для совместимости, но в админке это блок `Команда`.
 - `subtitle`
 - `team_count_label`
 - `team_image_alt`
+- `content_alignment`
+- `subtitle_alignment`
+- `team_heading_alignment`
 
 ### `gallery` meta
 - `prev_label`
@@ -87,33 +90,30 @@
 - `captcha_missing_message`
 - `captcha_required_message`
 - `anonymous_label`
-- `initial_reviews` (массив стартовых отзывов, редактируется из админки)
+- `initial_reviews`
 
 ### `map` meta
-- `subtitle` (приоритетнее `content`)
+- `subtitle`
 - `map_aria_label`
 - `fallback_text`
 - `fallback_link_text`
-- `menu_label` (название пункта "Карта" в футере)
+- `menu_label`
 
-### `header` meta (если создадите блок `header`)
+### `header` meta
 - `booking_label`
 - `booking_url`
 - `department_url`
 - `logo_title`
-- `logo_lines` (строки через Enter)
+- `logo_lines`
 - `logo_alt`
 
-### `footer` (если создадите блок `footer`)
-- `title` -> левая колонка, заголовок
-- `content` -> левая колонка, текст
-- meta:
-  - `developer_label`
-  - `developer_url`
-  - `developer_aria_label`
-  - `copyright`
+### `footer` meta
+- `developer_label`
+- `developer_url`
+- `developer_aria_label`
+- `copyright`
 
-## 4) Важно
-- Названия пунктов меню в шапке/футере берутся из `title` блоков `about/services/doctors/reviews/contact`.
-- Телефон, email, адрес, график, SEO, координаты карты редактируются в `Настройки сайта`.
-
+## 3) Важно
+- Названия пунктов меню в шапке и footer берутся из `title` блоков `about/services/doctors/reviews/contact`.
+- Телефон, email, адрес, график, SEO, координаты карты и theme settings редактируются в `Настройки сайта`.
+- Технические ключи `doctors` и `services` оставлены в API и коде для совместимости шаблона.

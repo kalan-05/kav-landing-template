@@ -9,8 +9,8 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -97,7 +97,7 @@ class PageBlockResource extends Resource
             'about' => 'Вводный текст секции',
             'services' => 'Описание секции',
             'doctors' => 'Описание секции',
-            'footer' => 'Текст о центре',
+            'footer' => 'Текст о проекте',
             default => 'Основной текст',
         };
     }
@@ -106,10 +106,10 @@ class PageBlockResource extends Resource
     {
         return match (static::currentKey($record, $get)) {
             'hero' => 'Этот текст показывается крупным заголовком на первом экране.',
-            'about' => 'Этот текст показывается сразу под заголовком секции «О нас».',
-            'services' => 'Этот текст показывается над списком направлений диагностики.',
-            'doctors' => 'Этот текст показывается в блоке с командой врачей.',
-            'footer' => 'Краткое описание центра в левой колонке footer.',
+            'about' => 'Этот текст показывается сразу под заголовком секции «О проекте».',
+            'services' => 'Этот текст показывается над списком предложений или элементов каталога.',
+            'doctors' => 'Этот текст показывается в блоке команды.',
+            'footer' => 'Краткое описание проекта в левой колонке footer.',
             default => null,
         };
     }
@@ -200,6 +200,19 @@ class PageBlockResource extends Resource
             ->columnSpanFull();
     }
 
+    protected static function alignmentSelect(string $name, string $label, string $default = 'left'): Select
+    {
+        return Select::make($name)
+            ->label($label)
+            ->options([
+                'left' => 'По левому краю',
+                'center' => 'По центру',
+                'right' => 'По правому краю',
+                'justify' => 'По ширине',
+            ])
+            ->default($default);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -231,16 +244,9 @@ class PageBlockResource extends Resource
                 static::plainTextEditor('content')
                     ->visible(fn (?Model $record, Get $get): bool => in_array(static::currentKey($record, $get), ['hero', 'about', 'services', 'doctors', 'footer'], true)),
 
-                Select::make('meta.content_alignment')
-                    ->label('Выравнивание текста')
-                    ->options([
-                        'left' => 'По левому краю',
-                        'center' => 'По центру',
-                        'right' => 'По правому краю',
-                        'justify' => 'По ширине',
-                    ])
-                    ->default(fn (?Model $record, Get $get): string => static::currentKey($record, $get) === 'doctors' ? 'center' : 'left')
-                    ->visible(fn (?Model $record, Get $get): bool => in_array(static::currentKey($record, $get), ['about', 'services', 'doctors', 'footer'], true)),
+                static::alignmentSelect('meta.content_alignment', 'Выравнивание основного текста', 'left')
+                    ->visible(fn (?Model $record, Get $get): bool => in_array(static::currentKey($record, $get), ['about', 'services', 'doctors', 'footer'], true))
+                    ->default(fn (?Model $record, Get $get): string => static::currentKey($record, $get) === 'doctors' ? 'center' : 'left'),
 
                 Section::make('Шапка сайта')
                     ->visible(fn (?Model $record, Get $get): bool => static::isBlock('header', $record, $get))
@@ -260,98 +266,60 @@ class PageBlockResource extends Resource
                             ->maxLength(255),
 
                         TextInput::make('meta.booking_label')
-                            ->label('Текст кнопки записи')
+                            ->label('Текст основной кнопки')
                             ->maxLength(255),
 
                         TextInput::make('meta.booking_url')
-                            ->label('Ссылка кнопки записи')
+                            ->label('Ссылка основной кнопки')
                             ->url()
                             ->maxLength(255),
 
                         TextInput::make('meta.department_url')
-                            ->label('Ссылка на страницу отделения')
+                            ->label('Ссылка на страницу «О проекте»')
                             ->url()
                             ->maxLength(255),
                     ])
                     ->columns(2),
 
-                Section::make('Секция «О нас»')
+                Section::make('Секция «О проекте»')
                     ->visible(fn (?Model $record, Get $get): bool => static::isBlock('about', $record, $get))
                     ->schema([
-                        TextInput::make('meta.block1_title')
-                            ->label('Заголовок первого списка')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.block1_history_title')
-                            ->label('Заголовок исторического блока')
-                            ->maxLength(255),
-
+                        TextInput::make('meta.block1_title')->label('Заголовок первого блока')->maxLength(255),
+                        TextInput::make('meta.block1_history_title')->label('Подзаголовок дополнительного текста')->maxLength(255),
                         Textarea::make('meta.block1_items')
-                            ->label('Пункты первого списка')
+                            ->label('Пункты первого блока')
                             ->rows(5)
                             ->helperText('Каждая новая строка будет отдельным пунктом.')
                             ->columnSpanFull(),
-
                         Textarea::make('meta.block1_history_text')
-                            ->label('Текст исторического блока')
+                            ->label('Короткий сопровождающий текст')
                             ->rows(4)
                             ->columnSpanFull(),
-
                         Textarea::make('meta.history_text')
-                            ->label('Исторические абзацы')
+                            ->label('Основные абзацы')
                             ->rows(6)
                             ->helperText('Каждая новая строка будет отдельным абзацем.')
                             ->columnSpanFull(),
-
-                        TextInput::make('meta.block2_title')
-                            ->label('Заголовок второго блока')
-                            ->maxLength(255)
-                            ->columnSpanFull(),
-
-                        TextInput::make('meta.block2_group1_title')
-                            ->label('Заголовок группы 1')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.block2_group2_title')
-                            ->label('Заголовок группы 2')
-                            ->maxLength(255),
-
+                        TextInput::make('meta.block2_title')->label('Заголовок второго блока')->maxLength(255)->columnSpanFull(),
+                        TextInput::make('meta.block2_group1_title')->label('Заголовок группы 1')->maxLength(255),
+                        TextInput::make('meta.block2_group2_title')->label('Заголовок группы 2')->maxLength(255),
                         Textarea::make('meta.block2_group1_items')
                             ->label('Пункты группы 1')
                             ->rows(5)
                             ->helperText('Каждая новая строка будет отдельным пунктом.'),
-
                         Textarea::make('meta.block2_group2_items')
                             ->label('Пункты группы 2')
                             ->rows(5)
                             ->helperText('Каждая новая строка будет отдельным пунктом.'),
-
-                        TextInput::make('meta.block3_lead')
-                            ->label('Лид третьего блока')
-                            ->maxLength(255)
-                            ->columnSpanFull(),
-
-                        TextInput::make('meta.block3_diagnosis')
-                            ->label('Список диагнозов')
-                            ->maxLength(255)
-                            ->columnSpanFull(),
-
-                        Textarea::make('meta.block3_text')
-                            ->label('Основной текст третьего блока')
-                            ->rows(5)
-                            ->columnSpanFull(),
-
-                        TextInput::make('meta.block4_title')
-                            ->label('Заголовок четвертого блока')
-                            ->maxLength(255)
-                            ->columnSpanFull(),
-
+                        TextInput::make('meta.block3_lead')->label('Лид третьего блока')->maxLength(255)->columnSpanFull(),
+                        TextInput::make('meta.block3_diagnosis')->label('Короткая акцентная фраза')->maxLength(255)->columnSpanFull(),
+                        Textarea::make('meta.block3_text')->label('Основной текст третьего блока')->rows(5)->columnSpanFull(),
+                        TextInput::make('meta.block4_title')->label('Заголовок четвертого блока')->maxLength(255)->columnSpanFull(),
                         Textarea::make('meta.block4_items')
                             ->label('Пункты четвертого блока')
                             ->rows(6)
                             ->helperText('Каждая новая строка будет отдельным пунктом.')
                             ->columnSpanFull(),
-
                         Textarea::make('meta.final_text')
                             ->label('Финальные абзацы секции')
                             ->rows(6)
@@ -360,75 +328,49 @@ class PageBlockResource extends Resource
                     ])
                     ->columns(2),
 
-                Section::make('Секция «Диагностика»')
+                Section::make('Секция «Предложения»')
                     ->visible(fn (?Model $record, Get $get): bool => static::isBlock('services', $record, $get))
                     ->schema([
                         Placeholder::make('services_notice')
                             ->label('Что здесь редактируется')
-                            ->content(new HtmlString('Описание секции редактируется в поле выше. Ниже редактируется полный список направлений диагностики, который показывается на сайте.')),
+                            ->content(new HtmlString('Описание секции редактируется в поле выше. Ниже редактируется полный список предложений или элементов каталога, который показывается на сайте.')),
 
                         Repeater::make('service_items')
-                            ->label('Пункты диагностики')
+                            ->label('Элементы каталога')
                             ->schema([
                                 Hidden::make('id'),
-                                TextInput::make('title')
-                                    ->label('Текст пункта')
-                                    ->required()
-                                    ->columnSpan(2),
-                                TextInput::make('group')
-                                    ->label('Группа / колонка')
-                                    ->maxLength(255),
-                                TextInput::make('sort_order')
-                                    ->label('Порядок')
-                                    ->numeric()
-                                    ->default(0),
-                                Toggle::make('is_active')
-                                    ->label('Показывать')
-                                    ->default(true),
+                                TextInput::make('title')->label('Название')->required()->columnSpan(2),
+                                TextInput::make('group')->label('Группа / колонка')->maxLength(255),
+                                TextInput::make('sort_order')->label('Порядок')->numeric()->default(0),
+                                Toggle::make('is_active')->label('Показывать')->default(true),
                             ])
                             ->columns(5)
-                            ->addActionLabel('Добавить пункт')
+                            ->addActionLabel('Добавить элемент')
                             ->defaultItems(0)
-                            ->itemLabel(fn (array $state): string => trim((string) ($state['title'] ?? '')) ?: 'Новый пункт')
+                            ->itemLabel(fn (array $state): string => trim((string) ($state['title'] ?? '')) ?: 'Новый элемент')
                             ->formatStateUsing(fn ($state, ?PageBlock $record): array => ($record?->key ?? '') === 'services' ? static::servicesState() : (is_array($state) ? $state : []))
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Секция «Врачи»')
+                Section::make('Секция «Команда»')
                     ->visible(fn (?Model $record, Get $get): bool => static::isBlock('doctors', $record, $get))
                     ->schema([
                         Placeholder::make('doctors_notice')
-                            ->label('Карточки врачей')
-                            ->content(new HtmlString('Имена, должности, фотографии и описания врачей редактируются в меню <strong>Сайт -> Врачи</strong>.')),
+                            ->label('Карточки участников')
+                            ->content(new HtmlString('Имена, роли, фотографии и описания участников редактируются в меню <strong>Сайт -> Команда</strong>.')),
 
                         TextInput::make('meta.subtitle')
-                            ->label('Подзаголовок над фотографией команды')
+                            ->label('Подзаголовок над общей фотографией')
                             ->maxLength(255),
 
-                        Select::make('meta.subtitle_alignment')
-                            ->label('Выравнивание подзаголовка')
-                            ->options([
-                                'left' => 'По левому краю',
-                                'center' => 'По центру',
-                                'right' => 'По правому краю',
-                                'justify' => 'По ширине',
-                            ])
-                            ->default('center'),
+                        static::alignmentSelect('meta.subtitle_alignment', 'Выравнивание подзаголовка', 'center'),
 
                         TextInput::make('meta.team_count_label')
                             ->label('Подпись над описанием')
                             ->helperText('Показывается без числа.')
                             ->maxLength(255),
 
-                        Select::make('meta.team_heading_alignment')
-                            ->label('Выравнивание подписи')
-                            ->options([
-                                'left' => 'По левому краю',
-                                'center' => 'По центру',
-                                'right' => 'По правому краю',
-                                'justify' => 'По ширине',
-                            ])
-                            ->default('center'),
+                        static::alignmentSelect('meta.team_heading_alignment', 'Выравнивание подписи над описанием', 'center'),
 
                         TextInput::make('meta.team_image_alt')
                             ->label('Alt-текст общей фотографии')
@@ -440,16 +382,10 @@ class PageBlockResource extends Resource
                     ->visible(fn (?Model $record, Get $get): bool => static::isBlock('gallery', $record, $get))
                     ->schema([
                         Placeholder::make('gallery_notice')
-                            ->label('Фотографии галереи')
-                            ->content(new HtmlString('Фотографии и подписи галереи редактируются в меню <strong>Сайт -> Галерея</strong>.')),
-
-                        TextInput::make('meta.prev_label')
-                            ->label('Текст кнопки «Назад»')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.next_label')
-                            ->label('Текст кнопки «Вперед»')
-                            ->maxLength(255),
+                            ->label('Изображения галереи')
+                            ->content(new HtmlString('Изображения и подписи галереи редактируются в меню <strong>Сайт -> Галерея</strong>.')),
+                        TextInput::make('meta.prev_label')->label('Текст кнопки «Назад»')->maxLength(255),
+                        TextInput::make('meta.next_label')->label('Текст кнопки «Вперед»')->maxLength(255),
                     ])
                     ->columns(2),
 
@@ -458,120 +394,38 @@ class PageBlockResource extends Resource
                     ->schema([
                         Placeholder::make('reviews_notice')
                             ->label('Отзывы посетителей')
-                            ->content(new HtmlString('Опубликованные отзывы и модерация находятся в меню <strong>Сайт -> Отзывы</strong>. Здесь редактируются только заголовки, подписи и текст формы.')),
-
-                        TextInput::make('meta.doctor_prefix')
-                            ->label('Префикс перед именем врача')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.prev_label')
-                            ->label('Текст кнопки «Назад»')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.next_label')
-                            ->label('Текст кнопки «Вперед»')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.prev_aria_label')
-                            ->label('Aria-label кнопки «Назад»')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.next_aria_label')
-                            ->label('Aria-label кнопки «Вперед»')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.form_title')
-                            ->label('Заголовок формы')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.name_label')
-                            ->label('Подпись поля имени')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.name_placeholder')
-                            ->label('Подсказка поля имени')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.doctor_label')
-                            ->label('Подпись выбора врача')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.doctor_placeholder')
-                            ->label('Подсказка выбора врача')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.rating_label')
-                            ->label('Подпись поля оценки')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.rating_placeholder')
-                            ->label('Подсказка поля оценки')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.review_text_label')
-                            ->label('Подпись текста отзыва')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.review_text_placeholder')
-                            ->label('Подсказка текста отзыва')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.submit_label')
-                            ->label('Текст кнопки отправки')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.submitting_label')
-                            ->label('Текст кнопки во время отправки')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.success_message')
-                            ->label('Сообщение об успешной отправке')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.error_message')
-                            ->label('Сообщение при ошибке отправки')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.network_error_message')
-                            ->label('Сообщение при сетевой ошибке')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.spam_message')
-                            ->label('Сообщение при антиспаме')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.captcha_missing_message')
-                            ->label('Сообщение, если капча не настроена')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.captcha_required_message')
-                            ->label('Сообщение, если капча не подтверждена')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.anonymous_label')
-                            ->label('Подпись для анонимного автора')
-                            ->maxLength(255),
-
+                            ->content(new HtmlString('Опубликованные отзывы и модерация находятся в меню <strong>Сайт -> Отзывы</strong>. Здесь редактируются только подписи и тексты формы.')),
+                        TextInput::make('meta.doctor_prefix')->label('Префикс перед именем связанного участника')->maxLength(255),
+                        TextInput::make('meta.prev_label')->label('Текст кнопки «Назад»')->maxLength(255),
+                        TextInput::make('meta.next_label')->label('Текст кнопки «Вперед»')->maxLength(255),
+                        TextInput::make('meta.prev_aria_label')->label('Aria-label кнопки «Назад»')->maxLength(255),
+                        TextInput::make('meta.next_aria_label')->label('Aria-label кнопки «Вперед»')->maxLength(255),
+                        TextInput::make('meta.form_title')->label('Заголовок формы')->maxLength(255),
+                        TextInput::make('meta.name_label')->label('Подпись поля имени')->maxLength(255),
+                        TextInput::make('meta.name_placeholder')->label('Подсказка поля имени')->maxLength(255),
+                        TextInput::make('meta.doctor_label')->label('Подпись выбора участника')->maxLength(255),
+                        TextInput::make('meta.doctor_placeholder')->label('Подсказка выбора участника')->maxLength(255),
+                        TextInput::make('meta.rating_label')->label('Подпись поля оценки')->maxLength(255),
+                        TextInput::make('meta.rating_placeholder')->label('Подсказка поля оценки')->maxLength(255),
+                        TextInput::make('meta.review_text_label')->label('Подпись текста отзыва')->maxLength(255),
+                        TextInput::make('meta.review_text_placeholder')->label('Подсказка текста отзыва')->maxLength(255),
+                        TextInput::make('meta.submit_label')->label('Текст кнопки отправки')->maxLength(255),
+                        TextInput::make('meta.submitting_label')->label('Текст кнопки во время отправки')->maxLength(255),
+                        TextInput::make('meta.success_message')->label('Сообщение об успешной отправке')->maxLength(255),
+                        TextInput::make('meta.error_message')->label('Сообщение при ошибке отправки')->maxLength(255),
+                        TextInput::make('meta.network_error_message')->label('Сообщение при сетевой ошибке')->maxLength(255),
+                        TextInput::make('meta.spam_message')->label('Сообщение антиспама')->maxLength(255),
+                        TextInput::make('meta.captcha_missing_message')->label('Сообщение, если капча не настроена')->maxLength(255),
+                        TextInput::make('meta.captcha_required_message')->label('Сообщение, если капча не подтверждена')->maxLength(255),
+                        TextInput::make('meta.anonymous_label')->label('Подпись для анонимного автора')->maxLength(255),
                         Repeater::make('meta.initial_reviews')
                             ->label('Стартовые отзывы по умолчанию')
                             ->helperText('Показываются до загрузки опубликованных отзывов и используются как резервный контент.')
                             ->schema([
-                                TextInput::make('author_name')
-                                    ->label('Автор')
-                                    ->required(),
-                                TextInput::make('doctor_name')
-                                    ->label('Врач'),
-                                TextInput::make('rating')
-                                    ->label('Оценка')
-                                    ->numeric()
-                                    ->minValue(1)
-                                    ->maxValue(5)
-                                    ->default(5),
-                                Textarea::make('text')
-                                    ->label('Текст отзыва')
-                                    ->rows(3)
-                                    ->required()
-                                    ->columnSpanFull(),
+                                TextInput::make('author_name')->label('Автор')->required(),
+                                TextInput::make('doctor_name')->label('Связанный участник'),
+                                TextInput::make('rating')->label('Оценка')->numeric()->minValue(1)->maxValue(5)->default(5),
+                                Textarea::make('text')->label('Текст отзыва')->rows(3)->required()->columnSpanFull(),
                             ])
                             ->columns(3)
                             ->defaultItems(0)
@@ -592,50 +446,23 @@ class PageBlockResource extends Resource
                     ->visible(fn (?Model $record, Get $get): bool => static::isBlock('map', $record, $get))
                     ->schema([
                         Placeholder::make('map_notice')
-                            ->label('Координаты карты')
-                            ->content(new HtmlString('Координаты, масштаб, адрес и телефон в балуне карты редактируются в меню <strong>Сайт -> Настройки сайта</strong>.')),
-
-                        TextInput::make('meta.subtitle')
-                            ->label('Подзаголовок под названием университета')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.menu_label')
-                            ->label('Подпись ссылки «Карта» в footer')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.map_aria_label')
-                            ->label('Aria-label карты')
-                            ->maxLength(255),
-
-                        Textarea::make('meta.fallback_text')
-                            ->label('Текст при ошибке загрузки карты')
-                            ->rows(2),
-
-                        TextInput::make('meta.fallback_link_text')
-                            ->label('Текст ссылки на Яндекс.Карты')
-                            ->maxLength(255),
+                            ->label('Координаты и адрес')
+                            ->content(new HtmlString('Координаты, масштаб, адрес и контактные данные в блоке карты редактируются в меню <strong>Сайт -> Настройки сайта</strong>.')),
+                        TextInput::make('meta.subtitle')->label('Подзаголовок под картой')->maxLength(255),
+                        TextInput::make('meta.menu_label')->label('Название пункта «Карта» в footer')->maxLength(255),
+                        TextInput::make('meta.map_aria_label')->label('Aria-label карты')->maxLength(255),
+                        Textarea::make('meta.fallback_text')->label('Текст при ошибке загрузки карты')->rows(2),
+                        TextInput::make('meta.fallback_link_text')->label('Текст ссылки на карту')->maxLength(255),
                     ])
                     ->columns(2),
 
                 Section::make('Подвал сайта')
                     ->visible(fn (?Model $record, Get $get): bool => static::isBlock('footer', $record, $get))
                     ->schema([
-                        TextInput::make('meta.developer_label')
-                            ->label('Подпись ссылки на разработчика')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.developer_url')
-                            ->label('Ссылка на разработчика')
-                            ->url()
-                            ->maxLength(255),
-
-                        TextInput::make('meta.developer_aria_label')
-                            ->label('Aria-label ссылки на разработчика')
-                            ->maxLength(255),
-
-                        TextInput::make('meta.copyright')
-                            ->label('Текст копирайта')
-                            ->maxLength(255),
+                        TextInput::make('meta.developer_label')->label('Подпись ссылки на разработчика')->maxLength(255),
+                        TextInput::make('meta.developer_url')->label('Ссылка на разработчика')->url()->maxLength(255),
+                        TextInput::make('meta.developer_aria_label')->label('Aria-label ссылки на разработчика')->maxLength(255),
+                        TextInput::make('meta.copyright')->label('Текст копирайта')->maxLength(255),
                     ])
                     ->columns(2),
             ])
