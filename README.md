@@ -19,6 +19,14 @@
 - небольшие агентские и сервисные проекты
 - нишевые сервисные проекты после замены demo-контента
 
+## Профили запуска
+
+Шаблон умеет стартовать с тремя профилями demo-контента:
+
+- `service` - сервисный или экспертный лендинг
+- `medical` - медицинский центр, клиника, кабинет, отделение
+- `corporate` - корпоративный B2B-сайт или продуктовая компания
+
 ## Быстрый старт
 
 ### Backend
@@ -27,18 +35,23 @@
 cd backend
 composer install
 cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-php artisan storage:link
+php artisan template:install service --fresh --force
 ```
 
 На Beget используйте `php8.2`.
+
+Для медицинского или корпоративного профиля:
+
+```bash
+php artisan template:install medical --fresh --force
+php artisan template:install corporate --fresh --force
+```
 
 Если нужен быстрый старт на Linux или Beget:
 
 ```bash
 cd backend
-bash scripts/install-template.sh
+TEMPLATE_PROFILE=medical bash scripts/install-template.sh
 ```
 
 ### Frontend
@@ -96,3 +109,4 @@ bash scripts/deploy-beget.sh
 
 Проект включает стартовый demo-seed без клиентских данных и персональных фотографий.
 Технические API-ключи `doctors` и `services` сохранены для совместимости, но в админке используются универсальные названия `Команда` и `Предложения`.
+Переключение профиля доступно через `template:install` и `template:seed-demo`.
